@@ -22,7 +22,7 @@
 用户自行实现数据存储部分，项目仅提供MySQL默认实现。
 
 ## 文件下载时序图
-![文件下载逻辑时序图](minio-plus-doc/image/file_download_sequence_diagram.png)
+![文件下载逻辑时序图](/minio-plus-doc/image/file_download_sequence_diagram.png)
 
 浏览器向服务端发起文件读取请求，服务端会根据fileKey入参取得文件的元数据信息。获取文件元数据信息后，根据元数据信息中的是否私有字段和所有者字段判断是否具备文件读取权限。
 
