@@ -116,14 +116,42 @@ PS：原图尺寸小于缩略图压缩尺寸时，储存原图。
 
 其他规则：文件在桶中存储时，按照 /年/月 划分路径。用以规避Linux ext3文件系统下单个目录最多创建32000个目录的问题，参考了阿里云OSS的处理办法。
 
-
 # 3 接口设计 | Interface Design
+
+## 3.1 文件检查
+
+## 3.2
 
 # 4 数据库设计 | Database Design
 
+## 4.1 文件元数据信息表 | file_metadata_info
+
+| Name | Type | Length | Not Null | Virtual | Key | Comment |
+| --- | --- | --- | --- | --- | --- | --- |
+| id            | bigint	|20	        | True	| False | True	|主键
+| file_key	| varchar	| 50		| True	| False	| 	| 文件KEY
+| file_md5	| varchar	| 50		| False	| False	| 	| 文件MD5值
+| file_name	| varchar	| 255		| True	| False	| 	| 文件名
+| file_mime_type	| varchar	| 50	| False	| False	| 	| MIME类型
+| file_suffix	| varchar	| 20		| False	| False	| 	| 文件后缀
+| file_size	| bigint	| 20		| False	| False	| 	| 文件大小
+| is_preview	| tinyint	| 1		| False	| False	| 	| 预览图 0:无 1:有
+| is_private	| tinyint	| 1		| False	| False	| 	| 是否私有 0:否 1:是
+| bucket	| varchar	| 20	        | True	| False	| 	| 存储桶
+| bucket_path	        | varchar	| 20		| True	| False	| 	| 存储桶路径
+| upload_id	| varchar	| 255	| False	| False	| 	| 上传任务id
+| is_finished	| tinyint	| 1		| True	| False	| 	| 状态 0:未完成 1:已完成
+| is_part	| tinyint	| 1		| False	| False	| 	| 是否分块 0:否 1:是
+| part_number	| int	        | 4		| False	| False	| 	| 分块数量
+| create_time	| datetime	| 		| True	| False	| 	| 创建时间
+| create_user	| varchar	| 255		| True	| False	| 	| 创建用户
+| update_time	| datetime	| 		| True	| False	| 	| 更新时间
+| update_user	| varchar	| 255		| True	| False	| 	| 更新用户
+
+
 # 5 使用 | Getting Started
 
-# 6 代码托管
+# 6 代码托管 | Managed Code
 
 代码托管在 [https://github.com/lxp135/minio-plus](https://github.com/lxp135/minio-plus/) 仓库中，jar 发布到 Maven 中央仓库。
 
@@ -131,7 +159,14 @@ PS：原图尺寸小于缩略图压缩尺寸时，储存原图。
 
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
-# 8 参与贡献
+# 8 参与贡献 | Credits
 
 * 刘小平 contact@liuxp.me
+
+# 9 参考资料 | Reference
+
+* [MinIO S3 APIs](minio-plus-doc/minio-s3-api.md)
+
+
+
 
