@@ -94,11 +94,9 @@ http://127.0.0.1:9000/test/test123
 
 ## 2.4 缩略图
 
-在图片上传时，自动生成大中小三种缩略图，压缩时比例按照图片原始比例不做变化。使用相同的md5名称存入分别存入4个桶中。
+在图片上传时，自动生成缩略图，压缩时比例按照图片原始比例不做变化。使用相同的md5名称分别存入原始图片桶和缩略图桶中。
 
-* 缩略图大：默认按照宽度600像素进行等比例压缩
-* 缩略图中：默认按照宽度300像素进行等比例压缩
-* 缩略图小：默认按照宽度100像素进行等比例压缩
+* 缩略图：默认按照宽度300像素进行等比例压缩
 
 PS：原图尺寸小于缩略图压缩尺寸时，储存原图。
 
@@ -109,9 +107,7 @@ PS：原图尺寸小于缩略图压缩尺寸时，储存原图。
 * 音频（ audio ）：mp3、wav、flac、acc、ogg、aiff、m4a、wma、midi
 * 视频（ video ）：mp4、avi、mov、wmv、flv、mkv、mpeg、mpg 、rmvb
 * 图片 – 原始（ image ）：jpeg、jpg、png、bmp、webp、gif
-* 图片 – 缩略图大（ image-large ）：同上，按照宽度 600 像素压缩
-* 图片 – 缩略图中（ image-medium ）：同上，按照宽度 300 像素压缩
-* 图片 – 缩略图小（ image-small ）：同上，按照宽度 100 像素压缩
+* 图片 – 缩略图（ image-preview ）：默认按照宽度 300 像素压缩缩
 * 其他（ other ） ：未在上述格式中的文件
 
 其他规则：文件在桶中存储时，按照 /年/月 划分路径。用以规避Linux ext3文件系统下单个目录最多创建32000个目录的问题，参考了阿里云OSS的处理办法。
@@ -128,7 +124,7 @@ PS：原图尺寸小于缩略图压缩尺寸时，储存原图。
 
 | Name | Type | Length | Not Null | Virtual | Key | Comment |
 | --- | --- | --- | --- | --- | --- | --- |
-| id            | bigint	|20	        | True	| False | True	|主键
+| id            | bigint	|20	        | True	| False | True	| 自增ID
 | file_key	| varchar	| 50		| True	| False	| 	| 文件KEY
 | file_md5	| varchar	| 50		| False	| False	| 	| 文件MD5值
 | file_name	| varchar	| 255		| True	| False	| 	| 文件名
@@ -138,8 +134,8 @@ PS：原图尺寸小于缩略图压缩尺寸时，储存原图。
 | is_preview	| tinyint	| 1		| False	| False	| 	| 预览图 0:无 1:有
 | is_private	| tinyint	| 1		| False	| False	| 	| 是否私有 0:否 1:是
 | bucket	| varchar	| 20	        | True	| False	| 	| 存储桶
-| bucket_path	        | varchar	| 20		| True	| False	| 	| 存储桶路径
-| upload_id	| varchar	| 255	| False	| False	| 	| 上传任务id
+| bucket_path	| varchar	| 20		| True	| False	| 	| 存储桶路径
+| upload_id	| varchar	| 255	        | False	| False	| 	| 上传任务id
 | is_finished	| tinyint	| 1		| True	| False	| 	| 状态 0:未完成 1:已完成
 | is_part	| tinyint	| 1		| False	| False	| 	| 是否分块 0:否 1:是
 | part_number	| int	        | 4		| False	| False	| 	| 分块数量
