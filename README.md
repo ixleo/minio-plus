@@ -122,6 +122,7 @@ PS：原图尺寸小于缩略图压缩尺寸时，储存原图。
 
 ## 4.1 文件元数据信息表 | file_metadata_info
 
+
 | Name           | Type     | Length | Not Null | Virtual | Key  | Comment                |
 | ---------------- | ---------- | -------- | ---------- | --------- | ------ | ------------------------ |
 | id             | bigint   | 20     | True     | False   | True | 自增ID                 |
@@ -188,4 +189,3 @@ CREATE TABLE `file_metadata_info` (
 # 9 参考资料 | Reference
 
 * [MinIO S3 APIs](minio-plus-doc/minio-s3-api.md)
-

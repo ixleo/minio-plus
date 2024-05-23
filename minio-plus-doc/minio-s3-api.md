@@ -2,7 +2,7 @@
 
 本页面列举了MinIO支持的亚马逊 S3 API 接口列表。
 
-**MinIO 强烈建议使用 [S3-Compatible SDK](https://min.io/docs/minio/linux/developers/minio-drivers.html#minio-drivers) 进行对象存储操作.**
+**MinIO 建议使用 [S3-Compatible SDK](https://min.io/docs/minio/linux/developers/minio-drivers.html#minio-drivers) 进行对象存储操作.**
 
 ## 对象API | Object APIs
 
@@ -50,11 +50,11 @@ PutObjectAcl
 
 ## 桶API | Bucket APIs
 
-* [CreateBucket](https://docs.aws.amazon.com/AmazonS3/latest/API/API_CreateBucket.html)
-* [DeleteBucket](https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucket.html)
-* [DeleteBucketEncryption](https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucketEncryption.html)
-* [DeleteBucketTagging](https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucketTagging.html)
-* [GetBucketEncryption](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketEncryption.html)
+* 创建存储桶 [CreateBucket](https://docs.aws.amazon.com/AmazonS3/latest/API/API_CreateBucket.html)
+* 删除存储桶 [DeleteBucket](https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucket.html)
+* 重置存储桶的加密方式为SSE-S3 [DeleteBucketEncryption](https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucketEncryption.html)
+* 删除存储桶相关标签 [DeleteBucketTagging](https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucketTagging.html)
+* 获取存储桶的加密方式 [GetBucketEncryption](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketEncryption.html)
 * [GetBucketLocation](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketLocation.html)
 * [GetBucketTagging](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketTagging.html)
 * [GetBucketVersioning](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketVersioning.html)
@@ -71,7 +71,7 @@ PutObjectAcl
 * [PutBucketReplication](https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketReplication.html)
 * [DeleteBucketReplication](https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucketReplication.html)
 
-### Bucket Lifecycle
+### 桶生命周期 | Bucket Lifecycle
 
 * [GetBucketLifecycle](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketLifecycle.html)
 * [GetBucketLifecycleConfiguration](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketLifecycleConfiguration.html)

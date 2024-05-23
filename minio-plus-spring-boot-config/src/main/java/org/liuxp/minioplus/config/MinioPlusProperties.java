@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * MinioPlus配置类
  * @author contact@liuxp.me
+ * @since  2024/05/22
  */
 @Getter
 @Setter
@@ -18,20 +19,9 @@ import org.springframework.stereotype.Component;
 public class MinioPlusProperties {
 
     /**
-     * 存储引擎
-     * 枚举值 minio,local
+     * MinIO引擎地址
      */
-    private String engine;
-
-    /**
-     * 引擎地址，如配置为local则为本地根目录
-     */
-    private String engineBackend;
-
-    /**
-     * 文件元数据服务地址
-     */
-    private String metadataBackend;
+    private String backend;
 
     /**
      * 存储引擎key
@@ -83,7 +73,7 @@ public class MinioPlusProperties {
         private boolean enable = true;
 
         /**
-         * 分块大小，配置单位为byte，默认为5242880
+         * 分块大小，配置单位为byte，默认为5242880(5MB)
          */
         private int size = 5242880;
 
@@ -105,19 +95,10 @@ public class MinioPlusProperties {
         private boolean enable = true;
 
         /**
-         * 大缩略图尺寸，默认为600
+         * 缩略图尺寸，默认为300
          */
-        private int sizeLarge = 600;
+        private int size = 300;
 
-        /**
-         * 中缩略图尺寸，默认为300
-         */
-        private int sizeMedium = 300;
-
-        /**
-         * 小缩略图尺寸，默认为100
-         */
-        private int sizeSmall = 100;
     }
 
 }
