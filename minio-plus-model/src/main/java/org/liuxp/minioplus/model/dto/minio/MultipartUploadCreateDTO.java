@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.core.common.dto.minio;
+package org.liuxp.minioplus.model.dto.minio;
 
 import com.google.common.collect.Multimap;
 import io.minio.messages.Part;

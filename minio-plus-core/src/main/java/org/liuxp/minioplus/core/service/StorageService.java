@@ -1,9 +1,9 @@
 package org.liuxp.minioplus.core.service;
 
 import cn.hutool.core.lang.Pair;
-import org.liuxp.minioplus.core.common.dto.FileMetadataInfoDTO;
-import org.liuxp.minioplus.core.common.dto.FileSaveDTO;
-import org.liuxp.minioplus.core.common.vo.FileMetadataInfoVo;
+import org.liuxp.minioplus.model.dto.FileMetadataInfoDTO;
+import org.liuxp.minioplus.model.dto.FileSaveDTO;
+import org.liuxp.minioplus.model.vo.FileMetadataInfoVo;
 
 import java.io.InputStream;
 import java.util.List;

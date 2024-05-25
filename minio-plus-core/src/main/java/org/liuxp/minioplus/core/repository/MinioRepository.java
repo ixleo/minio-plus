@@ -3,7 +3,7 @@ package org.liuxp.minioplus.core.repository;
 import io.minio.CreateMultipartUploadResponse;
 import io.minio.ListPartsResponse;
 import io.minio.ObjectWriteResponse;
-import org.liuxp.minioplus.core.common.dto.minio.MultipartUploadCreateDTO;
+import org.liuxp.minioplus.model.dto.minio.MultipartUploadCreateDTO;
 import org.liuxp.minioplus.core.repository.impl.CustomMinioClient;
 
 import java.io.InputStream;

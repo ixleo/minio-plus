@@ -7,10 +7,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.liuxp.minioplus.application.context.Response;
 import org.liuxp.minioplus.config.MinioPlusProperties;
-import org.liuxp.minioplus.core.common.dto.FileCheckDTO;
-import org.liuxp.minioplus.core.common.dto.FileCompleteDTO;
-import org.liuxp.minioplus.core.common.vo.CompleteResultVo;
-import org.liuxp.minioplus.core.common.vo.FileCheckResultVo;
+import org.liuxp.minioplus.model.dto.FileCheckDTO;
+import org.liuxp.minioplus.model.dto.FileCompleteDTO;
+import org.liuxp.minioplus.model.vo.CompleteResultVo;
+import org.liuxp.minioplus.model.vo.FileCheckResultVo;
 import org.liuxp.minioplus.core.engine.StorageEngineService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -142,24 +142,6 @@ public class StorageController {
         String url = storageEngineService.download(fileKey, userId);
         // 不存在时返回404 返回重定向地址
         return REDIRECT_PREFIX + remakeUrl(url);
-    }
-
-    /**
-     * 文件删除
-     * @param fileKey 文件KEY
-     * @return 文件下载地址
-     */
-    @ApiOperation(value = "文件删除")
-    @PostMapping("/remove/{fileKey}")
-    @ResponseBody
-    public Response<Boolean> remove(@PathVariable String fileKey)  {
-
-        // 取得当前登录用户信息
-        String userId = "mockUser";
-        // 取得文件读取路径
-        Boolean remove = storageEngineService.remove(fileKey, userId);
-        // 返回重定向地址
-        return Response.success(remove);
     }
 
     /**

@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.core.common.enums;
+package org.liuxp.minioplus.model.enums;
 
 /**
  * 返回给前端的code编码对应内容的枚举

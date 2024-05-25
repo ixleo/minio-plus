@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.core.common.enums;
+package org.liuxp.minioplus.model.enums;
 
 import cn.hutool.core.util.ArrayUtil;
 import lombok.Getter;

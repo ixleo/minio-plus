@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.core.common.copy;
+package org.liuxp.minioplus.model.copy;
 
 import io.minio.messages.ListPartsResult;
 import io.minio.messages.Part;

@@ -1,9 +1,9 @@
-package org.liuxp.minioplus.core.common.bo;
+package org.liuxp.minioplus.model.bo;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.liuxp.minioplus.core.common.vo.FileCheckResultVo;
+import org.liuxp.minioplus.model.vo.FileCheckResultVo;
 
 import java.util.List;
 

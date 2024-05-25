@@ -1,11 +1,11 @@
 package org.liuxp.minioplus.core.engine;
 
 import cn.hutool.core.lang.Pair;
-import org.liuxp.minioplus.core.common.dto.FileCheckDTO;
-import org.liuxp.minioplus.core.common.dto.FileMetadataInfoSaveDTO;
-import org.liuxp.minioplus.core.common.vo.CompleteResultVo;
-import org.liuxp.minioplus.core.common.vo.FileCheckResultVo;
-import org.liuxp.minioplus.core.common.vo.FileMetadataInfoVo;
+import org.liuxp.minioplus.model.dto.FileCheckDTO;
+import org.liuxp.minioplus.model.dto.FileMetadataInfoSaveDTO;
+import org.liuxp.minioplus.model.vo.CompleteResultVo;
+import org.liuxp.minioplus.model.vo.FileCheckResultVo;
+import org.liuxp.minioplus.model.vo.FileMetadataInfoVo;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.core.common.bo;
+package org.liuxp.minioplus.model.bo;
 
 import lombok.Getter;
 import lombok.Setter;
