@@ -18,7 +18,7 @@
         </dependency>
         <dependency>
             <groupId>org.liuxp</groupId>
-            <artifactId>minio-plus-spring-boot-config</artifactId>
+            <artifactId>minio-plus-config</artifactId>
         </dependency>
         <!--Swagger工具包 knife4j -->
         <dependency>

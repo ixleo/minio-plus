@@ -6,7 +6,7 @@ import io.minio.http.Method;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.liuxp.minioplus.config.MinioPlusProperties;
-import org.liuxp.minioplus.model.dto.minio.MultipartUploadCreateDTO;
+import org.liuxp.minioplus.core.common.context.MultipartUploadCreateDTO;
 import org.liuxp.minioplus.model.enums.ResponseCodeEnum;
 import org.liuxp.minioplus.core.common.exception.MinioPlusBusinessException;
 import org.liuxp.minioplus.core.repository.MinioRepository;

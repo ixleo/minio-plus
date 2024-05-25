@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>minio-plus-spring-boot-config</artifactId>
+    <artifactId>minio-plus-config</artifactId>
 
     <dependencies>
         <dependency>

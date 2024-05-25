@@ -35,13 +35,13 @@
     </scm>
 
     <modules>
-        <module>minio-plus-core</module>
-        <module>minio-plus-spring-boot-config</module>
-        <module>minio-plus-spring-boot-starter</module>
         <module>minio-plus-application</module>
-        <module>minio-plus-model</module>
         <module>minio-plus-common</module>
+        <module>minio-plus-config</module>
+        <module>minio-plus-core</module>
         <module>minio-plus-extension</module>
+        <module>minio-plus-model</module>
+        <module>minio-plus-spring-boot-starter</module>
     </modules>
 
     <properties>
@@ -158,7 +158,7 @@
             </dependency>
             <dependency>
                 <groupId>org.liuxp</groupId>
-                <artifactId>minio-plus-spring-boot-config</artifactId>
+                <artifactId>minio-plus-config</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
