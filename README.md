@@ -23,8 +23,20 @@
 项目定位为一个MinIO的Java语言SDK，非独立部署服务，并支持spring-boot自动装配。
 用户自行实现数据存储部分，项目仅提供MySQL默认实现。
 
-/TODO 整体设计，包图
+![模块划分](doc/image/模块划分.png)
 
+* minio-plus-core：核心业务逻辑包
+* minio-plus-extension：扩展包，该包封装了Controller相关接口，帮助项目使用时开箱即用
+* minio-plus-common：工具类包，一些常用的工具类
+* minio-plus-model：实体类包
+* minio-plus-config：配置类包
+* minio-plus-spring-boot-starter
+  * minio-plus-all-spring-boot-starter：包含core、extension、common、model
+  * minio-plus-core-spring-boot-starter：包含core、common、model
+  * minio-plus-model-spring-boot-starter：只有model自身
+* minio-plus-application
+  * minio-plus-application-mysql：基于all-starter，元数据使用MySQL数据库的示例工程
+  
 ## 2.1 文件下载 | File Download
 
 ![文件下载逻辑时序图](doc/image/文件下载时序图.png)
