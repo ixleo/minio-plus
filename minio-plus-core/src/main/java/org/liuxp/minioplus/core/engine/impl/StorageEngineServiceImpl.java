@@ -19,9 +19,9 @@ import org.liuxp.minioplus.model.dto.FileMetadataInfoDTO;
 import org.liuxp.minioplus.model.dto.FileMetadataInfoSaveDTO;
 import org.liuxp.minioplus.model.dto.FileMetadataInfoUpdateDTO;
 import org.liuxp.minioplus.core.common.context.MultipartUploadCreateDTO;
-import org.liuxp.minioplus.model.enums.ResponseCodeEnum;
-import org.liuxp.minioplus.model.enums.StorageBucketEnums;
-import org.liuxp.minioplus.core.common.exception.MinioPlusBusinessException;
+import org.liuxp.minioplus.common.enums.MinioPlusErrorCode;
+import org.liuxp.minioplus.common.enums.StorageBucketEnums;
+import org.liuxp.minioplus.common.exception.MinioPlusException;
 import org.liuxp.minioplus.core.common.utils.MinioPlusCommonUtil;
 import org.liuxp.minioplus.model.vo.CompleteResultVo;
 import org.liuxp.minioplus.model.vo.FileCheckResultVo;
@@ -278,8 +278,8 @@ public class StorageEngineServiceImpl implements StorageEngineService {
         FileMetadataInfoVo metadata = metadataRepository.one(searchDto);
 
         if(metadata == null){
-            log.error(fileKey+"不存在");
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(),fileKey+"不存在");
+            log.error(fileKey+MinioPlusErrorCode.FILE_EXIST_FAILED.getMessage());
+            throw new MinioPlusException(MinioPlusErrorCode.FILE_EXIST_FAILED.getCode(),fileKey+MinioPlusErrorCode.FILE_EXIST_FAILED.getMessage());
         }
 
         if(Boolean.TRUE.equals(metadata.getIsFinished())){
@@ -371,8 +371,8 @@ public class StorageEngineServiceImpl implements StorageEngineService {
             return isCreateFile;
 
         }catch(Exception e){
-            log.error("文件上传失败",e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(),"文件上传失败");
+            log.error(MinioPlusErrorCode.FILE_UPLOAD_FAILED.getMessage(),e);
+            throw new MinioPlusException(MinioPlusErrorCode.FILE_UPLOAD_FAILED);
         }
 
     }
@@ -452,8 +452,8 @@ public class StorageEngineServiceImpl implements StorageEngineService {
                 byte[] largeImageBytes = largeImage.toByteArray();
                 minioRepository.write(StorageBucketEnums.IMAGE_PREVIEW.getCode(), MinioPlusCommonUtil.getObjectName(saveDTO.getFileMd5()), new ByteArrayInputStream(largeImageBytes), largeImageBytes.length, saveDTO.getFileMimeType());
             }catch(Exception e){
-                log.error("缩略图写入失败",e);
-                throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(),"缩略图写入失败");
+                log.error(MinioPlusErrorCode.FILE_PREVIEW_WRITE_FAILED.getMessage(),e);
+                throw new MinioPlusException(MinioPlusErrorCode.FILE_PREVIEW_WRITE_FAILED);
             }
         }
 
@@ -561,12 +561,12 @@ public class StorageEngineServiceImpl implements StorageEngineService {
      */
     private void authentication(FileMetadataInfoVo metadata, String fileKey, String userId){
         if (null == metadata) {
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), fileKey + "不存在!");
+            throw new MinioPlusException(MinioPlusErrorCode.FILE_EXIST_FAILED.getCode(), fileKey + MinioPlusErrorCode.FILE_EXIST_FAILED.getMessage());
         }
 
         // 元数据信息存在，判断权限
         if(Boolean.TRUE.equals(metadata.getIsPrivate()) && !userId.equals(metadata.getCreateUser())){
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), fileKey + "用户userId="+userId+"没有访问权限!");
+            throw new MinioPlusException(MinioPlusErrorCode.FILE_PERMISSION_CHECK_FAILED.getCode(), fileKey + "用户"+userId+MinioPlusErrorCode.FILE_PERMISSION_CHECK_FAILED.getMessage());
         }
     }
 
@@ -688,7 +688,7 @@ public class StorageEngineServiceImpl implements StorageEngineService {
         Integer chunkNum = meteData.getPartNumber();
 
         if(partMd5List==null || chunkNum != partMd5List.size()){
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(),"文件分块MD5校验码数量与实际分块不一致");
+            throw new MinioPlusException(MinioPlusErrorCode.FILE_PART_NUM_CHECK_FAILED);
         }
 
         // 校验文件完整性
@@ -764,7 +764,7 @@ public class StorageEngineServiceImpl implements StorageEngineService {
                     .uploadId(meteData.getUploadTaskId())
                     .partNumberMarker(0)
                     .build());
-        }catch (MinioPlusBusinessException e){
+        }catch (MinioPlusException e){
             log.error("获取分片信息失败，partList返回空",e);
             MultipartUploadCreateDTO multipartUploadCreateDTO = MultipartUploadCreateDTO.builder()
                     .bucketName(meteData.getStorageBucket())
@@ -821,7 +821,7 @@ public class StorageEngineServiceImpl implements StorageEngineService {
             // 获取文件后缀
             String suffix = FileUtil.getSuffix(bo.getFullFileName());
             if (CharSequenceUtil.isBlank(suffix)) {
-                throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), "无法获取文件的拓展名");
+                throw new MinioPlusException(MinioPlusErrorCode.FILE_SUFFIX_GET_FAILED);
             }
             // 文件key
             fileKey = IdUtil.fastSimpleUUID();

@@ -1,7 +1,6 @@
-package org.liuxp.minioplus.model.enums;
+package org.liuxp.minioplus.common.enums;
 
 import cn.hutool.core.util.ArrayUtil;
-import lombok.Getter;
 
 import java.util.Arrays;
 
@@ -11,7 +10,6 @@ import java.util.Arrays;
  * @author contact@liuxp.me
  * @since 2023/06/26
  */
-@Getter
 public enum StorageBucketEnums {
 
     /**
@@ -39,6 +37,18 @@ public enum StorageBucketEnums {
     private final String name;
 
     private final String[] types;
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String[] getTypes() {
+        return types;
+    }
 
     /**
      * 构造方法

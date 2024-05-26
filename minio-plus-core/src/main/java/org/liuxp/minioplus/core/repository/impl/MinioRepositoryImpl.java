@@ -7,8 +7,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.liuxp.minioplus.config.MinioPlusProperties;
 import org.liuxp.minioplus.core.common.context.MultipartUploadCreateDTO;
-import org.liuxp.minioplus.model.enums.ResponseCodeEnum;
-import org.liuxp.minioplus.core.common.exception.MinioPlusBusinessException;
+import org.liuxp.minioplus.common.enums.MinioPlusErrorCode;
+import org.liuxp.minioplus.common.exception.MinioPlusException;
 import org.liuxp.minioplus.core.repository.MinioRepository;
 import org.springframework.stereotype.Repository;
 
@@ -71,8 +71,8 @@ public class MinioRepositoryImpl implements MinioRepository {
         try {
             return this.getClient().createMultipartUpload(multipartUploadCreate.getBucketName(), multipartUploadCreate.getRegion(), multipartUploadCreate.getObjectName(), multipartUploadCreate.getHeaders(), multipartUploadCreate.getExtraQueryParams());
         } catch (Exception e) {
-            log.error("文件分片获取上传编号失败:{}", e.getMessage(), e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), "获取上传编号失败");
+            log.error(MinioPlusErrorCode.CREATE_MULTIPART_UPLOAD_FAILED.getMessage()+":{}", e.getMessage(), e);
+            throw new MinioPlusException(MinioPlusErrorCode.CREATE_MULTIPART_UPLOAD_FAILED);
         }
     }
 
@@ -87,8 +87,8 @@ public class MinioRepositoryImpl implements MinioRepository {
         try {
             return this.getClient().completeMultipartUpload(multipartUploadCreate.getBucketName(), multipartUploadCreate.getRegion(), multipartUploadCreate.getObjectName(), multipartUploadCreate.getUploadId(), multipartUploadCreate.getParts(), multipartUploadCreate.getHeaders(), multipartUploadCreate.getExtraQueryParams());
         } catch (Exception e) {
-            log.error("合并分片失败,uploadId:{},ObjectName:{},失败原因:{},", multipartUploadCreate.getUploadId(), multipartUploadCreate.getObjectName(), e.getMessage(), e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), "合并分片失败");
+            log.error(MinioPlusErrorCode.COMPLETE_MULTIPART_FAILED.getMessage()+",uploadId:{},ObjectName:{},失败原因:{},", multipartUploadCreate.getUploadId(), multipartUploadCreate.getObjectName(), e.getMessage(), e);
+            throw new MinioPlusException(MinioPlusErrorCode.COMPLETE_MULTIPART_FAILED);
         }
     }
 
@@ -104,8 +104,8 @@ public class MinioRepositoryImpl implements MinioRepository {
         try {
             return this.getClient().listParts(multipartUploadCreate.getBucketName(), multipartUploadCreate.getRegion(), multipartUploadCreate.getObjectName(), multipartUploadCreate.getMaxParts(), multipartUploadCreate.getPartNumberMarker(), multipartUploadCreate.getUploadId(), multipartUploadCreate.getHeaders(), multipartUploadCreate.getExtraQueryParams());
         } catch (Exception e) {
-            log.error("查询分片失败:{}", e.getMessage(), e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), "查询分片失败");
+            log.error(MinioPlusErrorCode.LIST_PARTS_FAILED.getMessage()+":{}", e.getMessage(), e);
+            throw new MinioPlusException(MinioPlusErrorCode.LIST_PARTS_FAILED);
         }
     }
 
@@ -130,8 +130,8 @@ public class MinioRepositoryImpl implements MinioRepository {
                             .extraQueryParams(queryParams)
                             .build());
         } catch (Exception e) {
-            log.error("获取预签名URL失败:{}", e.getMessage(), e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), "获取预签名URL失败");
+            log.error(MinioPlusErrorCode.CREATE_UPLOAD_URL_FAILED.getMessage()+":{}", e.getMessage(), e);
+            throw new MinioPlusException(MinioPlusErrorCode.CREATE_UPLOAD_URL_FAILED);
         }
     }
 
@@ -160,8 +160,8 @@ public class MinioRepositoryImpl implements MinioRepository {
                             .extraQueryParams(reqParams)
                             .build());
         } catch (Exception e) {
-            log.error("获取预签名下载URL失败:{}", e.getMessage(), e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), "获取预签名下载URL失败");
+            log.error(MinioPlusErrorCode.CREATE_DOWNLOAD_URL_FAILED.getMessage()+":{}", e.getMessage(), e);
+            throw new MinioPlusException(MinioPlusErrorCode.CREATE_DOWNLOAD_URL_FAILED);
         }
     }
 
@@ -182,8 +182,8 @@ public class MinioRepositoryImpl implements MinioRepository {
                             .extraQueryParams(reqParams)
                             .build());
         } catch (Exception e) {
-            log.error("获取预签名预览URL失败:{}", e.getMessage(), e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(), "获取预签名预览URL失败");
+            log.error(MinioPlusErrorCode.CREATE_PREVIEW_URL_FAILED.getMessage()+":{}", e.getMessage(), e);
+            throw new MinioPlusException(MinioPlusErrorCode.CREATE_PREVIEW_URL_FAILED);
         }
     }
 
@@ -209,8 +209,8 @@ public class MinioRepositoryImpl implements MinioRepository {
                     .build());
 
         } catch (Exception e) {
-            log.error("文件写入失败",e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(),"文件写入失败");
+            log.error(MinioPlusErrorCode.WRITE_FAILED.getMessage(),e);
+            throw new MinioPlusException(MinioPlusErrorCode.WRITE_FAILED);
         }
 
         return true;
@@ -224,8 +224,8 @@ public class MinioRepositoryImpl implements MinioRepository {
             // 文件流转换为字节码
             return IoUtil.readBytes(inputStream);
         } catch (Exception e) {
-            log.error("文件读取失败",e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(),"文件读取失败");
+            log.error(MinioPlusErrorCode.READ_FAILED.getMessage(),e);
+            throw new MinioPlusException(MinioPlusErrorCode.READ_FAILED);
         }
 
     }
@@ -235,8 +235,8 @@ public class MinioRepositoryImpl implements MinioRepository {
         try {
             this.getClient().removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
-            log.error("删除失败",e);
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(),"删除失败");
+            log.error(MinioPlusErrorCode.DELETE_FAILED.getMessage(),e);
+            throw new MinioPlusException(MinioPlusErrorCode.DELETE_FAILED);
         }
     }
 

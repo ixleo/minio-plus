@@ -12,9 +12,9 @@ import org.liuxp.minioplus.config.MinioPlusProperties;
 import org.liuxp.minioplus.model.dto.FileMetadataInfoDTO;
 import org.liuxp.minioplus.model.dto.FileMetadataInfoSaveDTO;
 import org.liuxp.minioplus.model.dto.FileSaveDTO;
-import org.liuxp.minioplus.model.enums.ResponseCodeEnum;
-import org.liuxp.minioplus.model.enums.StorageBucketEnums;
-import org.liuxp.minioplus.core.common.exception.MinioPlusBusinessException;
+import org.liuxp.minioplus.common.enums.MinioPlusErrorCode;
+import org.liuxp.minioplus.common.enums.StorageBucketEnums;
+import org.liuxp.minioplus.common.exception.MinioPlusException;
 import org.liuxp.minioplus.core.common.utils.ContentTypeUtil;
 import org.liuxp.minioplus.core.common.utils.MinioPlusCommonUtil;
 import org.liuxp.minioplus.model.vo.FileMetadataInfoVo;
@@ -144,7 +144,7 @@ public class StorageServiceImpl implements StorageService {
     FileMetadataInfoSaveDTO buildSaveDto(FileSaveDTO fileSaveDTO, byte[] fileBytes){
 
         if(null==fileBytes){
-            throw new MinioPlusBusinessException(ResponseCodeEnum.FAIL.getCode(),"文件流不能为空");
+            throw new MinioPlusException(MinioPlusErrorCode.FILE_BYTES_FAILED);
         }
         // 计算文件MD5值
         String md5 = SecureUtil.md5().digestHex(fileBytes);

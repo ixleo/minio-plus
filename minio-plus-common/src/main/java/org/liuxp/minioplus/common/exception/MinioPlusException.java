@@ -1,11 +1,13 @@
-package org.liuxp.minioplus.core.common.exception;
+package org.liuxp.minioplus.common.exception;
+
+import org.liuxp.minioplus.common.enums.MinioPlusErrorCode;
 
 /**
  * MinioPlus专用异常定义
  * @author contact@liuxp.me
- * @since  2023/08/14
+ * @since  2024/05/26
  */
-public class MinioPlusBusinessException extends RuntimeException {
+public class MinioPlusException extends RuntimeException {
 
     private static final long serialVersionUID = 772046747932011086L;
 
@@ -21,12 +23,17 @@ public class MinioPlusBusinessException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public MinioPlusBusinessException() {
+    public MinioPlusException() {
         super();
     }
 
-    public MinioPlusBusinessException(String message) {
+    public MinioPlusException(String message) {
         super(message);
+    }
+
+    public MinioPlusException(MinioPlusErrorCode minioPlusErrorCode){
+        this.errorCode = minioPlusErrorCode.getCode();
+        this.errorMessage = minioPlusErrorCode.getMessage();
     }
 
     public String getErrorMessage() {
@@ -37,7 +44,7 @@ public class MinioPlusBusinessException extends RuntimeException {
         this.errorMessage = errorMessage;
     }
 
-    public MinioPlusBusinessException(int errorCode, String errorMessage) {
+    public MinioPlusException(int errorCode, String errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }

@@ -166,11 +166,6 @@
                 <artifactId>minio-plus-spring-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
-            <dependency>
-                <groupId>org.liuxp</groupId>
-                <artifactId>minio-plus-spring-mvc</artifactId>
-                <version>${revision}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
