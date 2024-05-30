@@ -38,9 +38,6 @@ public class FileMetadataInfoUpdateDTO {
     @ApiModelProperty("文件长度")
     private Long fileSize;
     
-    @ApiModelProperty("业务领域类型名称")
-    private String fileDomainName;
-    
     @ApiModelProperty("存储引擎")
     private String storageEngine;
     

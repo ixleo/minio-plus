@@ -29,7 +29,7 @@ public enum StorageBucketEnums {
     AUDIO("audio", "音频文件桶",new String[]{"mp3", "wav", "flac", "acc", "ogg", "aiff", "m4a", "wma", "midi"}),
     VIDEO("video", "视频文件桶",new String[]{"mp4", "avi", "mov", "wmv", "flv", "mkv", "mpeg", "mpg", "rmvb"}),
     IMAGE("image", "图片文件桶",new String[]{"jpeg", "jpg", "png", "bmp", "webp", "gif"}),
-    IMAGE_PREVIEW("image-preview", "缩略图文件桶",new String[]{"jpeg_large", "jpg_large", "png_large", "bmp_large", "webp_large", "gif_large"}),
+    IMAGE_PREVIEW("image-preview", "缩略图文件桶",new String[]{"jpeg_preview", "jpg_preview", "png_preview", "bmp_preview", "webp_preview", "gif_preview"}),
     OTHER("other", "其他文件桶",new String[]{"*"});
 
     private final String code;

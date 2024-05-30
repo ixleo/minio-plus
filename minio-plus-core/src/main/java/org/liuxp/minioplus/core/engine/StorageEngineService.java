@@ -18,13 +18,13 @@ import java.util.List;
 public interface StorageEngineService {
 
     /**
-     * 文件上传预检查
+     * 上传任务初始化
      *
      * @param dto dto
      * @param userId  用户编号
      * @return {@link FileCheckResultVo}
      */
-    FileCheckResultVo check(FileCheckDTO dto,String userId);
+    FileCheckResultVo init(FileCheckDTO dto,String userId);
 
 
     /**

@@ -38,8 +38,6 @@ public class StorageController {
      */
     private static final String REDIRECT_PREFIX = "redirect:";
 
-    private static final String FAILURE = "failure";
-
     /**
      * 存储引擎Service接口定义
      */
@@ -53,20 +51,20 @@ public class StorageController {
     MinioPlusProperties properties;
 
     /**
-     * 文件预检查
-     * 文件上传前的预检查：秒传、分块上传和断点续传等特性均基于该方法实现
+     * 上传任务初始化
+     * 上传前的预检查：秒传、分块上传和断点续传等特性均基于该方法实现
      * @param fileCheckDTO 文件预检查入参
      * @return 检查结果
      */
-    @ApiOperation(value = "文件预检查")
-    @PostMapping("/upload/check")
+    @ApiOperation(value = "上传任务初始化")
+    @PostMapping("/upload/init")
     @ResponseBody
-    public Response<FileCheckResultVo> check(@RequestBody @Validated FileCheckDTO fileCheckDTO) {
+    public Response<FileCheckResultVo> init(@RequestBody @Validated FileCheckDTO fileCheckDTO) {
 
         // 取得当前登录用户信息
         String userId = "mockUser";
 
-        FileCheckResultVo resultVo = storageEngineService.check(fileCheckDTO,userId);
+        FileCheckResultVo resultVo = storageEngineService.init(fileCheckDTO,userId);
 
         if(resultVo!=null){
             for (FileCheckResultVo.Part part : resultVo.getPartList()) {
@@ -186,7 +184,7 @@ public class StorageController {
      */
     private String remakeUrl(String url){
 
-        if(StrUtil.isNotBlank(properties.getBrowserUrl())&& !url.contains(FAILURE)){
+        if(StrUtil.isNotBlank(properties.getBrowserUrl())){
             return url.replace(properties.getBackend(), properties.getBrowserUrl());
         }
         return url;

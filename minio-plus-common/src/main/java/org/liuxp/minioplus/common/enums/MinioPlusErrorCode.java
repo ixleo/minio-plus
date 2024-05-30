@@ -7,9 +7,14 @@ package org.liuxp.minioplus.common.enums;
  */
 public enum MinioPlusErrorCode {
 
-
+    /**
+     * 默认异常
+     */
     FAIL(1000, "操作失败"),
 
+    /**
+     * MinIO Plus 异常
+     */
     FILE_EXIST_FAILED(1001,"文件不存在"),
     FILE_PERMISSION_CHECK_FAILED(1002,"没有访问权限"),
     FILE_PART_NUM_CHECK_FAILED(1003,"文件分块MD5校验码数量与实际分块不一致"),
@@ -18,6 +23,9 @@ public enum MinioPlusErrorCode {
     FILE_UPLOAD_FAILED(1006,"文件上传失败"),
     FILE_PREVIEW_WRITE_FAILED(1007,"缩略图写入失败"),
 
+    /**
+     * MinIO 异常
+     */
     CREATE_MULTIPART_UPLOAD_FAILED(2001, "获取上传编号失败"),
     COMPLETE_MULTIPART_FAILED(2002, "合并分片失败"),
     LIST_PARTS_FAILED(2003, "查询分片失败"),
