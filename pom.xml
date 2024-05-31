@@ -35,6 +35,7 @@
     </scm>
 
     <modules>
+        <module>minio-plus-api-wrapper</module>
         <module>minio-plus-application</module>
         <module>minio-plus-common</module>
         <module>minio-plus-config</module>
