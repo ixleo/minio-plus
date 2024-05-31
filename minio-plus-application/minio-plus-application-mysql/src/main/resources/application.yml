@@ -25,11 +25,11 @@ spring:
         #驱动名称
         driver-class-name: com.mysql.cj.jdbc.Driver
         #链接地址
-        url: jdbc:mysql://localhost:3306/minio_plus?characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://192.168.50.141:3306/minio-plus?characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai
         #用户名
-        username: root
+        username: minio
         #密码
-        password: root
+        password: minioadmin
 ##################################################################
 # 服务器
 ##################################################################

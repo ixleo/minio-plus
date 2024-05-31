@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.io.BaseEncoding;
+import io.minio.Digest;
 
 
 import javax.crypto.Mac;
@@ -37,7 +38,11 @@ public class MinIORestful {
         // 动态传入参数
         String url = "http://localhost:9000/document";
 
-        HttpResponse httpResponse = request(url,"","/document","head");
+//        ZonedDateTime date = ZonedDateTime.parse("2024-05-31T16:31:54Z");
+        // 取得当前时间
+        ZonedDateTime date = ZonedDateTime.now();
+
+        HttpResponse httpResponse = request(url,"","/document","HEAD",date);
 
         System.out.println("httpResponse.isOk()="+httpResponse.isOk());
         System.out.println("httpResponse.getStatus()="+httpResponse.getStatus());
@@ -46,10 +51,9 @@ public class MinIORestful {
 
     }
 
-    public static HttpResponse request(String url,String params,String path,String method) throws NoSuchAlgorithmException, InvalidKeyException {
+    public static HttpResponse request(String url,String params,String path,String method,ZonedDateTime date) throws NoSuchAlgorithmException, InvalidKeyException {
 
-        // 取得当前时间
-        ZonedDateTime date = ZonedDateTime.now();
+
 
         // 创建除Authorization外所有header
         Map<String, List<String>> headers = new HashMap<>();
@@ -173,7 +177,8 @@ public class MinIORestful {
             ,String canonicalQueryString,String method,String path) throws NoSuchAlgorithmException {
 
         String canonicalRequest = method + "\n" + path + "\n" + canonicalQueryString + "\n"
-                + Joiner.on("\n").withKeyValueSeparator(":").join(canonicalHeaders) + "\n\n" + signedHeaders + "\n" + "x-amz-content-sha256";
+                + Joiner.on("\n").withKeyValueSeparator(":").join(canonicalHeaders) + "\n\n" + signedHeaders + "\n" + ZERO_SHA256_HASH;
+        System.out.println("canonicalRequest="+canonicalRequest);
         return Digest.sha256Hash(canonicalRequest);
     }
 
