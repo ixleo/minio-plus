@@ -1,21 +1,16 @@
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import com.google.common.io.BaseEncoding;
-import io.minio.Digest;
-
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -25,7 +20,10 @@ public class MinIORestful {
 
     static final String serviceName = "s3";
     static final String US_EAST_1 = "us-east-1";
-    private static final Set<String> IGNORED_HEADERS = ImmutableSet.of("accept-encoding", "authorization", "content-type", "content-length", "user-agent");
+
+
+
+    private static final Set<String> IGNORED_HEADERS = CollUtil.set(true,"accept-encoding", "authorization", "content-type", "content-length", "user-agent");
 
     static String accessKey = "minioadmin";
     static String secretKey = "minioadmin";
@@ -34,6 +32,8 @@ public class MinIORestful {
     static String backend = "http://localhost:9000";
 
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
+
+
 
         // 动态传入参数
         String url = "http://localhost:9000/document";
@@ -146,7 +146,7 @@ public class MinIORestful {
      * @return
      */
     public static String buildSignedHeaders(Map<String, String> canonicalHeaders) {
-        return Joiner.on(";").join(canonicalHeaders.keySet());
+        return StrUtil.join(";", canonicalHeaders.keySet());
     }
 
     public static String buildCanonicalQueryString(String params){
@@ -155,31 +155,51 @@ public class MinIORestful {
             return "";
         }
 
+        return params;
+
+        //TODO
+
+//        MapUtil
+
         // Building a multimap which only order keys, ordering values is not performed
         // until MinIO server supports it.
-        Multimap<String, String> signedQueryParams =
-                MultimapBuilder.treeKeys().arrayListValues().build();
-
-        for (String queryParam : params.split("&")) {
-            String[] tokens = queryParam.split("=");
-            if (tokens.length > 1) {
-                signedQueryParams.put(tokens[0], tokens[1]);
-            } else {
-                signedQueryParams.put(tokens[0], "");
-            }
-        }
-
-        return Joiner.on("&").withKeyValueSeparator("=").join(signedQueryParams.entries());
+//        Multimap<String, String> signedQueryParams =
+//                MultimapBuilder.treeKeys().arrayListValues().build();
+//
+//        for (String queryParam : params.split("&")) {
+//            String[] tokens = queryParam.split("=");
+//            if (tokens.length > 1) {
+//                signedQueryParams.put(tokens[0], tokens[1]);
+//            } else {
+//                signedQueryParams.put(tokens[0], "");
+//            }
+//        }
+//
+//        return Joiner.on("&").withKeyValueSeparator("=").join(signedQueryParams.entries());
 
     }
 
     public static String buildCanonicalRequest(Map<String, String> canonicalHeaders,String signedHeaders
             ,String canonicalQueryString,String method,String path) throws NoSuchAlgorithmException {
 
+        StringBuilder headers = new StringBuilder();
+        for (String key : canonicalHeaders.keySet()) {
+
+            headers.append(key);
+            headers.append(":");
+            headers.append(canonicalHeaders.get(key));
+            headers.append("\n");
+        }
+
         String canonicalRequest = method + "\n" + path + "\n" + canonicalQueryString + "\n"
-                + Joiner.on("\n").withKeyValueSeparator(":").join(canonicalHeaders) + "\n\n" + signedHeaders + "\n" + ZERO_SHA256_HASH;
+                + headers + "\n" + signedHeaders + "\n" + ZERO_SHA256_HASH;
         System.out.println("canonicalRequest="+canonicalRequest);
-        return Digest.sha256Hash(canonicalRequest);
+
+        byte[] data = canonicalRequest.getBytes(StandardCharsets.UTF_8);
+        MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
+        sha256Digest.update(data, 0, data.length);
+
+        return HexUtil.encodeHexStr(sha256Digest.digest());
     }
 
     /**
@@ -217,7 +237,7 @@ public class MinIORestful {
      */
     public static String buildSignature(byte[] signingKey,String stringToSign) throws NoSuchAlgorithmException, InvalidKeyException {
         byte[] digest = sumHmac(signingKey, stringToSign.getBytes(StandardCharsets.UTF_8));
-        return BaseEncoding.base16().encode(digest).toLowerCase(Locale.US);
+        return HexUtil.encodeHexStr(digest);
     }
 
     /**

@@ -85,7 +85,9 @@ public class MinioRepositoryImpl implements MinioRepository {
     @Override
     public ObjectWriteResponse completeMultipartUpload(MultipartUploadCreateDTO multipartUploadCreate) {
         try {
-            return this.getClient().completeMultipartUpload(multipartUploadCreate.getBucketName(), multipartUploadCreate.getRegion(), multipartUploadCreate.getObjectName(), multipartUploadCreate.getUploadId(), multipartUploadCreate.getParts(), multipartUploadCreate.getHeaders(), multipartUploadCreate.getExtraQueryParams());
+            return this.getClient().completeMultipartUpload(multipartUploadCreate.getBucketName(), multipartUploadCreate.getRegion()
+                    , multipartUploadCreate.getObjectName(), multipartUploadCreate.getUploadId(), multipartUploadCreate.getParts(), multipartUploadCreate.getHeaders()
+                    , multipartUploadCreate.getExtraQueryParams());
         } catch (Exception e) {
             log.error(MinioPlusErrorCode.COMPLETE_MULTIPART_FAILED.getMessage()+",uploadId:{},ObjectName:{},失败原因:{},", multipartUploadCreate.getUploadId(), multipartUploadCreate.getObjectName(), e.getMessage(), e);
             throw new MinioPlusException(MinioPlusErrorCode.COMPLETE_MULTIPART_FAILED);

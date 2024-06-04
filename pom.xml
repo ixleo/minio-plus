@@ -35,7 +35,6 @@
     </scm>
 
     <modules>
-        <module>minio-plus-api-wrapper</module>
         <module>minio-plus-application</module>
         <module>minio-plus-common</module>
         <module>minio-plus-config</module>
@@ -43,6 +42,7 @@
         <module>minio-plus-extension</module>
         <module>minio-plus-model</module>
         <module>minio-plus-spring-boot-starter</module>
+        <module>minio-s3-api</module>
     </modules>
 
     <properties>
