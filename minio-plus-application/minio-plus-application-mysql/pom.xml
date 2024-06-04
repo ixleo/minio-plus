@@ -14,11 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.liuxp</groupId>
-            <artifactId>minio-plus-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.liuxp</groupId>
-            <artifactId>minio-plus-config</artifactId>
+            <artifactId>minio-plus-all-spring-boot-starter</artifactId>
         </dependency>
         <!--Swagger工具包 knife4j -->
         <dependency>
@@ -32,19 +28,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

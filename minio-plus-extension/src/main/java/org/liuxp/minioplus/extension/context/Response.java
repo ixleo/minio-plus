@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.application.context;
+package org.liuxp.minioplus.extension.context;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

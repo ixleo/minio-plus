@@ -26,15 +26,17 @@ public enum MinioPlusErrorCode {
     /**
      * MinIO 异常
      */
-    CREATE_MULTIPART_UPLOAD_FAILED(2001, "获取上传编号失败"),
-    COMPLETE_MULTIPART_FAILED(2002, "合并分片失败"),
-    LIST_PARTS_FAILED(2003, "查询分片失败"),
-    CREATE_UPLOAD_URL_FAILED(2004, "获取对象上传URL失败"),
-    CREATE_DOWNLOAD_URL_FAILED(2005, "获取对象下载URL失败"),
-    CREATE_PREVIEW_URL_FAILED(2006, "获取预对象预览URL失败"),
-    WRITE_FAILED(2007, "文件写入失败"),
-    READ_FAILED(2008, "文件读取失败"),
-    DELETE_FAILED(2009, "删除失败");
+    BUCKET_EXISTS_FAILED(2001, "桶检查失败"),
+    MAKE_BUCKET_FAILED(2002, "桶创建失败"),
+    CREATE_MULTIPART_UPLOAD_FAILED(2003, "获取上传编号失败"),
+    COMPLETE_MULTIPART_FAILED(2004, "合并分片失败"),
+    LIST_PARTS_FAILED(2005, "查询分片失败"),
+    CREATE_UPLOAD_URL_FAILED(2006, "获取对象上传URL失败"),
+    CREATE_DOWNLOAD_URL_FAILED(2007, "获取对象下载URL失败"),
+    CREATE_PREVIEW_URL_FAILED(2008, "获取预对象预览URL失败"),
+    WRITE_FAILED(2009, "文件写入失败"),
+    READ_FAILED(2010, "文件读取失败"),
+    DELETE_FAILED(2011, "删除失败");
 
     /**
      * 错误编码

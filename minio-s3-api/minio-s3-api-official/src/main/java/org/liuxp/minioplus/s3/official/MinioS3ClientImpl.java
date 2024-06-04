@@ -1,43 +1,44 @@
-package org.liuxp.minioplus.core.repository.impl;
+package org.liuxp.minioplus.s3.official;
 
 import cn.hutool.core.io.IoUtil;
+import com.google.common.collect.Maps;
 import io.minio.*;
 import io.minio.http.Method;
-import lombok.SneakyThrows;
+import io.minio.messages.Part;
 import lombok.extern.slf4j.Slf4j;
-import org.liuxp.minioplus.config.MinioPlusProperties;
-import org.liuxp.minioplus.core.common.context.MultipartUploadCreateDTO;
 import org.liuxp.minioplus.common.enums.MinioPlusErrorCode;
 import org.liuxp.minioplus.common.exception.MinioPlusException;
-import org.liuxp.minioplus.core.repository.MinioRepository;
+import org.liuxp.minioplus.config.MinioPlusProperties;
+import org.liuxp.minioplus.s3.def.ListParts;
+import org.liuxp.minioplus.s3.def.MinioS3Client;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- * MinIO文件存储引擎接口定义实现类
- *
- * @author contact@liuxp.me
- * @since  2023/07/06
- */
 @Slf4j
 @Repository
-public class MinioRepositoryImpl implements MinioRepository {
+public class MinioS3ClientImpl implements MinioS3Client {
 
-    private CustomMinioClient minioClient = null;
+    /**
+     * MinIO中上传编号名称
+     */
+    private static final String UPLOAD_ID = "uploadId";
+    /**
+     * 分片上传块号名称
+     */
+    private static final String PART_NUMBER = "partNumber";
 
     @Resource
     private MinioPlusProperties properties;
 
-    /**
-     * 取得MinioClient
-     * @return CustomMinioClient
-     */
-    @Override
+    private CustomMinioClient minioClient = null;
+
     public CustomMinioClient getClient(){
 
         if(null==this.minioClient){
@@ -51,77 +52,93 @@ public class MinioRepositoryImpl implements MinioRepository {
         return this.minioClient;
     }
 
-    /**
-     * 创建桶
-     *
-     * @param bucketName bucket名称
-     */
     @Override
-    @SneakyThrows(Exception.class)
-    public void createBucket(String bucketName) {
-        boolean found = this.getClient().bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
-        if (!found) {
-            log.info("create bucket: [{}]", bucketName);
-            this.getClient().makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+    public Boolean bucketExists(String bucketName) {
+        try {
+            return this.getClient().bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+        } catch (Exception e) {
+            log.error(MinioPlusErrorCode.BUCKET_EXISTS_FAILED.getMessage()+":{}", e.getMessage(), e);
+            throw new MinioPlusException(MinioPlusErrorCode.BUCKET_EXISTS_FAILED);
         }
     }
 
     @Override
-    public CreateMultipartUploadResponse createMultipartUpload(MultipartUploadCreateDTO multipartUploadCreate) {
+    public void makeBucket(String bucketName) {
+        boolean found = bucketExists(bucketName);
         try {
-            return this.getClient().createMultipartUpload(multipartUploadCreate.getBucketName(), multipartUploadCreate.getRegion(), multipartUploadCreate.getObjectName(), multipartUploadCreate.getHeaders(), multipartUploadCreate.getExtraQueryParams());
+            if (!found) {
+                log.info("create bucket: [{}]", bucketName);
+                this.getClient().makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            }
+        } catch (Exception e) {
+            log.error(MinioPlusErrorCode.MAKE_BUCKET_FAILED.getMessage()+":{}", e.getMessage(), e);
+            throw new MinioPlusException(MinioPlusErrorCode.MAKE_BUCKET_FAILED);
+        }
+    }
+
+    @Override
+    public String createMultipartUpload(String bucketName, String objectName) {
+        try {
+            CreateMultipartUploadResponse createMultipartUploadResponse = this.getClient().createMultipartUpload(bucketName, null, objectName, null, null);
+            return createMultipartUploadResponse.result().uploadId();
         } catch (Exception e) {
             log.error(MinioPlusErrorCode.CREATE_MULTIPART_UPLOAD_FAILED.getMessage()+":{}", e.getMessage(), e);
             throw new MinioPlusException(MinioPlusErrorCode.CREATE_MULTIPART_UPLOAD_FAILED);
         }
     }
 
-    /**
-     * 合并分片
-     *
-     * @param multipartUploadCreate 分片参数
-     * @return 是否成功
-     */
     @Override
-    public ObjectWriteResponse completeMultipartUpload(MultipartUploadCreateDTO multipartUploadCreate) {
+    public Boolean completeMultipartUpload(String bucketName, String objectName, String uploadId, List<ListParts.Part> parts) {
+
+        Part[] partArray = new Part[parts.size()];
+
+        for (int i = 0; i < parts.size(); i++) {
+            partArray[i] = new Part(parts.get(i).getPartNumber(),parts.get(i).getEtag());
+        }
+
         try {
-            return this.getClient().completeMultipartUpload(multipartUploadCreate.getBucketName(), multipartUploadCreate.getRegion()
-                    , multipartUploadCreate.getObjectName(), multipartUploadCreate.getUploadId(), multipartUploadCreate.getParts(), multipartUploadCreate.getHeaders()
-                    , multipartUploadCreate.getExtraQueryParams());
+            ObjectWriteResponse objectWriteResponse = this.getClient().completeMultipartUpload(bucketName, null
+                    , objectName, uploadId, partArray, null, null);
+            return objectWriteResponse != null;
         } catch (Exception e) {
-            log.error(MinioPlusErrorCode.COMPLETE_MULTIPART_FAILED.getMessage()+",uploadId:{},ObjectName:{},失败原因:{},", multipartUploadCreate.getUploadId(), multipartUploadCreate.getObjectName(), e.getMessage(), e);
+            log.error(MinioPlusErrorCode.COMPLETE_MULTIPART_FAILED.getMessage()+",uploadId:{},ObjectName:{},失败原因:{},", uploadId, objectName, e.getMessage(), e);
             throw new MinioPlusException(MinioPlusErrorCode.COMPLETE_MULTIPART_FAILED);
         }
     }
 
-
-    /**
-     * 获取分片信息列表
-     *
-     * @param multipartUploadCreate 请求参数
-     * @return {@link ListPartsResponse}
-     */
     @Override
-    public ListPartsResponse listMultipart(MultipartUploadCreateDTO multipartUploadCreate) {
+    public ListParts listParts(String bucketName, String objectName, Integer maxParts, String uploadId) {
+
+        ListParts listParts = new ListParts();
+
         try {
-            return this.getClient().listParts(multipartUploadCreate.getBucketName(), multipartUploadCreate.getRegion(), multipartUploadCreate.getObjectName(), multipartUploadCreate.getMaxParts(), multipartUploadCreate.getPartNumberMarker(), multipartUploadCreate.getUploadId(), multipartUploadCreate.getHeaders(), multipartUploadCreate.getExtraQueryParams());
+            ListPartsResponse listPartsResponse = this.getClient().listParts(bucketName, null, objectName, maxParts
+                    , 0, uploadId, null, null);
+
+            listParts.setBucketName(bucketName);
+            listParts.setObjectName(objectName);
+            listParts.setMaxParts(maxParts);
+            listParts.setUploadId(uploadId);
+            listParts.setPartList(new ArrayList<>());
+
+            for (Part part : listPartsResponse.result().partList()) {
+                listParts.addPart(part.partNumber(), part.etag(), part.lastModified(), part.partSize());
+            }
+
         } catch (Exception e) {
             log.error(MinioPlusErrorCode.LIST_PARTS_FAILED.getMessage()+":{}", e.getMessage(), e);
-            throw new MinioPlusException(MinioPlusErrorCode.LIST_PARTS_FAILED);
         }
+
+        return listParts;
     }
 
-
-    /**
-     * 获得对象上传的url
-     *
-     * @param bucketName  桶名称
-     * @param objectName  对象名称
-     * @param queryParams 查询参数
-     * @return {@link String}
-     */
     @Override
-    public String getPresignedObjectUrl(String bucketName, String objectName, Map<String, String> queryParams) {
+    public String getUploadObjectUrl(String bucketName, String objectName, String uploadId,String partNumber) {
+
+        Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(2);
+        queryParams.put(UPLOAD_ID, uploadId);
+        queryParams.put(PART_NUMBER, partNumber);
+
         try {
             return this.getClient().getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
@@ -137,17 +154,8 @@ public class MinioRepositoryImpl implements MinioRepository {
         }
     }
 
-    /**
-     * 取得下载链接
-     * @param fileName 文件全名含扩展名
-     * @param contentType 数据类型
-     * @param bucketName 桶名称
-     * @param objectName 对象名称含路径
-     * @return 下载地址
-     */
     @Override
     public String getDownloadUrl(String fileName, String contentType, String bucketName, String objectName) {
-
         Map<String, String> reqParams = new HashMap<>();
         reqParams.put("response-content-disposition", "attachment;filename=\""+fileName+"\"");
         reqParams.put("response-content-type", contentType);
@@ -169,7 +177,6 @@ public class MinioRepositoryImpl implements MinioRepository {
 
     @Override
     public String getPreviewUrl(String contentType, String bucketName, String objectName) {
-
         Map<String, String> reqParams = new HashMap<>();
         reqParams.put("response-content-type", contentType);
         reqParams.put("response-content-disposition", "inline");
@@ -190,8 +197,7 @@ public class MinioRepositoryImpl implements MinioRepository {
     }
 
     @Override
-    public Boolean write(String bucketName,String objectName, InputStream stream, long size, String contentType) {
-
+    public Boolean putObject(String bucketName, String objectName, InputStream stream, long size, String contentType) {
         try{
 
             // 检查存储桶是否已经存在
@@ -219,8 +225,7 @@ public class MinioRepositoryImpl implements MinioRepository {
     }
 
     @Override
-    public byte[] read(String bucketName,String objectName) {
-
+    public byte[] getObject(String bucketName, String objectName) {
         // 从远程MinIO服务读取文件流
         try (InputStream inputStream = this.getClient().getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build())) {
             // 文件流转换为字节码
@@ -229,11 +234,10 @@ public class MinioRepositoryImpl implements MinioRepository {
             log.error(MinioPlusErrorCode.READ_FAILED.getMessage(),e);
             throw new MinioPlusException(MinioPlusErrorCode.READ_FAILED);
         }
-
     }
 
     @Override
-    public void remove(String bucketName, String objectName) {
+    public void removeObject(String bucketName, String objectName) {
         try {
             this.getClient().removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
@@ -241,6 +245,4 @@ public class MinioRepositoryImpl implements MinioRepository {
             throw new MinioPlusException(MinioPlusErrorCode.DELETE_FAILED);
         }
     }
-
-
 }

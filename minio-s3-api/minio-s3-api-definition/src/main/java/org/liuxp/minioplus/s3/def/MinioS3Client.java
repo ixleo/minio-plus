@@ -57,10 +57,11 @@ public interface MinioS3Client {
      * 获得对象&分片上传链接
      * @param bucketName  桶名称
      * @param objectName  对象名称（含路径）
+     * @param uploadId  上传任务编号
      * @param partNumber 分片序号
      * @return {@link String}
      */
-    String getUploadObjectUrl(String bucketName, String objectName, String partNumber);
+    String getUploadObjectUrl(String bucketName, String objectName, String uploadId, String partNumber);
 
     /**
      * 取得下载链接

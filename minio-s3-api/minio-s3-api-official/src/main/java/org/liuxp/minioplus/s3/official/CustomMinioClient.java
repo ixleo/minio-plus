@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.core.repository.impl;
+package org.liuxp.minioplus.s3.official;
 
 import com.google.common.collect.Multimap;
 import io.minio.CreateMultipartUploadResponse;

@@ -17,6 +17,8 @@ spring:
         time-zone: GMT+8
         default-property-inclusion: non_null # 全局jackson配置
     mvc:
+        # 放开 Spring Boot 项目中 /static 目录下静态资源的拦截
+        static-path-pattern: /static/**
         pathmatch:
             # Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher所以需要配置此参数
             matching-strategy: ant_path_matcher
@@ -42,7 +44,7 @@ minioplus:
     # 存储引擎地址，如配置为local则不用配置
     backend: http://localhost:9000
     # 浏览器访问地址，文件、图片上传下载访问地址代理，如果minio被nginx代理，需要配置这个参数为代理后的前端访问地址
-    browser-url: http://localhost
+    browser-url: http://localhost:9000
     # 授权key
     key: minioadmin
     # 密钥

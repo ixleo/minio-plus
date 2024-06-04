@@ -19,12 +19,14 @@ public class ListParts {
 
     private int maxParts;
 
+    private String uploadId;
+
     private List<Part> partList = null;
 
     @Getter
     @Setter
     @ToString
-    static class Part{
+    public static class Part{
         private int partNumber;
 
         private String etag;
@@ -34,7 +36,7 @@ public class ListParts {
         private Long size;
     }
 
-    ListParts addPart(int partNumber,String etag,ZonedDateTime lastModified,Long size){
+    public void addPart(int partNumber, String etag, ZonedDateTime lastModified, Long size){
 
         Part part = new Part();
         part.setPartNumber(partNumber);
@@ -46,7 +48,6 @@ public class ListParts {
             partList = new ArrayList<>();
         }
         partList.add(part);
-        return this;
     }
 
 }

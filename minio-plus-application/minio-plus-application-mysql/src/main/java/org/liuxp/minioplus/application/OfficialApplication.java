@@ -4,15 +4,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
+ * 标准版示例工程启动类
  * @author contact@liuxp.me
  * @since 2024-05-22
  */
 
 @SpringBootApplication
-public class MinioPlusApplication {
+public class OfficialApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MinioPlusApplication.class, args);
+        SpringApplication.run(OfficialApplication.class, args);
     }
 
 }

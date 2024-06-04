@@ -164,7 +164,22 @@
             </dependency>
             <dependency>
                 <groupId>org.liuxp</groupId>
-                <artifactId>minio-plus-spring-boot-starter</artifactId>
+                <artifactId>minio-plus-all-spring-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.liuxp</groupId>
+                <artifactId>minio-s3-api-definition</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.liuxp</groupId>
+                <artifactId>minio-s3-api-custom</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.liuxp</groupId>
+                <artifactId>minio-s3-api-official</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>
@@ -209,37 +224,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-<!--            &lt;!&ndash; 要将源码放上去，需要加入这个插件 &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-source-plugin</artifactId>-->
-<!--                <version>${maven-source-plugin.version}</version>-->
-<!--                <configuration>-->
-<!--                    <attach>true</attach>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>jar</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-<!--            <plugin>-->
-<!--                <groupId>org.jacoco</groupId>-->
-<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--                <version>${jacoco.version}</version>-->
-<!--                <executions>-->
-<!--                    &lt;!&ndash;first execution : for preparing JaCoCo runtime agent&ndash;&gt;-->
-<!--                    <execution>-->
-<!--                        <id>prepare-agent</id>-->
-<!--                        <goals>-->
-<!--                            <goal>prepare-agent</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
