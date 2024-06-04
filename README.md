@@ -231,7 +231,10 @@ CREATE TABLE `file_metadata_info` (
 
 # 6 代码托管 | Managed Code
 
-代码托管在 [https://github.com/lxp135/minio-plus](https://github.com/lxp135/minio-plus/) 仓库中，jar 发布到 Maven 中央仓库。
+* [https://github.com/lxp135/minio-plus](https://github.com/lxp135/minio-plus/)
+* [https://gitee.com/lxp135/minio-plus](https://gitee.com/lxp135/minio-plus/)
+
+以上仓库中代码完全一致，各位同学可根据网络状况自行选择。
 
 # 7 版权 | License
 
