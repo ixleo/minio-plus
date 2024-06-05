@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.model.vo;
+package org.liuxp.minioplus.api.model.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

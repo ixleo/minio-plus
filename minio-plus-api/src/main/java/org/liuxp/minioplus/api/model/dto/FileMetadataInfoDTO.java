@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.model.dto;
+package org.liuxp.minioplus.api.model.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

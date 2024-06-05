@@ -9,18 +9,18 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import org.liuxp.minioplus.common.config.MinioPlusProperties;
-import org.liuxp.minioplus.model.dto.FileMetadataInfoDTO;
-import org.liuxp.minioplus.model.dto.FileMetadataInfoSaveDTO;
-import org.liuxp.minioplus.model.dto.FileSaveDTO;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoDTO;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoSaveDTO;
+import org.liuxp.minioplus.api.model.dto.FileSaveDTO;
 import org.liuxp.minioplus.common.enums.MinioPlusErrorCode;
 import org.liuxp.minioplus.common.enums.StorageBucketEnums;
 import org.liuxp.minioplus.common.exception.MinioPlusException;
 import org.liuxp.minioplus.core.common.utils.ContentTypeUtil;
 import org.liuxp.minioplus.core.common.utils.MinioPlusCommonUtil;
-import org.liuxp.minioplus.model.vo.FileMetadataInfoVo;
+import org.liuxp.minioplus.api.model.vo.FileMetadataInfoVo;
 import org.liuxp.minioplus.core.engine.StorageEngineService;
 import org.liuxp.minioplus.core.repository.MetadataRepository;
-import org.liuxp.minioplus.core.service.StorageService;
+import org.liuxp.minioplus.api.StorageService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -54,16 +54,7 @@ public class StorageServiceImpl implements StorageService {
     MinioPlusProperties properties;
 
     @Override
-    public FileMetadataInfoVo oneById(Long id) {
-
-        FileMetadataInfoDTO fileMetadataInfo = new FileMetadataInfoDTO();
-        fileMetadataInfo.setId(id);
-        return fileMetadataRepository.one(fileMetadataInfo);
-
-    }
-
-    @Override
-    public FileMetadataInfoVo oneByKey(String key) {
+    public FileMetadataInfoVo one(String key) {
 
         FileMetadataInfoDTO fileMetadataInfo = new FileMetadataInfoDTO();
         fileMetadataInfo.setFileKey(key);

@@ -10,27 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>minio-plus-core</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <!--  minio -->
-        <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>okhttp</artifactId>
-                    <groupId>com.squareup.okhttp3</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.11.0</version>
         </dependency>
         <dependency>
             <groupId>org.liuxp</groupId>
@@ -38,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>org.liuxp</groupId>
-            <artifactId>minio-plus-model</artifactId>
+            <artifactId>minio-plus-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.liuxp</groupId>

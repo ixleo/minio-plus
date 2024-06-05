@@ -1,9 +1,9 @@
 package org.liuxp.minioplus.core.repository;
 
-import org.liuxp.minioplus.model.dto.FileMetadataInfoDTO;
-import org.liuxp.minioplus.model.dto.FileMetadataInfoSaveDTO;
-import org.liuxp.minioplus.model.dto.FileMetadataInfoUpdateDTO;
-import org.liuxp.minioplus.model.vo.FileMetadataInfoVo;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoDTO;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoSaveDTO;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoUpdateDTO;
+import org.liuxp.minioplus.api.model.vo.FileMetadataInfoVo;
 
 import java.util.List;
 

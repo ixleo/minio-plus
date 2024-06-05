@@ -35,11 +35,11 @@
     </scm>
 
     <modules>
+        <module>minio-plus-api</module>
         <module>minio-plus-application</module>
         <module>minio-plus-common</module>
         <module>minio-plus-core</module>
         <module>minio-plus-extension</module>
-        <module>minio-plus-model</module>
         <module>minio-plus-spring-boot-starter</module>
         <module>minio-s3-api</module>
     </modules>
@@ -153,7 +153,7 @@
             </dependency>
             <dependency>
                 <groupId>org.liuxp</groupId>
-                <artifactId>minio-plus-model</artifactId>
+                <artifactId>minio-plus-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

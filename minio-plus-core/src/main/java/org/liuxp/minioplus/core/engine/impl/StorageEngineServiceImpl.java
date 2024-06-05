@@ -6,23 +6,22 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.liuxp.minioplus.common.config.MinioPlusProperties;
 import org.liuxp.minioplus.common.enums.MinioPlusErrorCode;
 import org.liuxp.minioplus.common.enums.StorageBucketEnums;
 import org.liuxp.minioplus.common.exception.MinioPlusException;
-import org.liuxp.minioplus.common.config.MinioPlusProperties;
-import org.liuxp.minioplus.core.common.context.MultipartUploadCreateDTO;
 import org.liuxp.minioplus.core.common.utils.MinioPlusCommonUtil;
 import org.liuxp.minioplus.core.engine.StorageEngineService;
 import org.liuxp.minioplus.core.repository.MetadataRepository;
-import org.liuxp.minioplus.model.bo.CreateUploadUrlReqBO;
-import org.liuxp.minioplus.model.bo.CreateUploadUrlRespBO;
-import org.liuxp.minioplus.model.dto.FileCheckDTO;
-import org.liuxp.minioplus.model.dto.FileMetadataInfoDTO;
-import org.liuxp.minioplus.model.dto.FileMetadataInfoSaveDTO;
-import org.liuxp.minioplus.model.dto.FileMetadataInfoUpdateDTO;
-import org.liuxp.minioplus.model.vo.CompleteResultVo;
-import org.liuxp.minioplus.model.vo.FileCheckResultVo;
-import org.liuxp.minioplus.model.vo.FileMetadataInfoVo;
+import org.liuxp.minioplus.api.model.bo.CreateUploadUrlReqBO;
+import org.liuxp.minioplus.api.model.bo.CreateUploadUrlRespBO;
+import org.liuxp.minioplus.api.model.dto.FileCheckDTO;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoDTO;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoSaveDTO;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoUpdateDTO;
+import org.liuxp.minioplus.api.model.vo.CompleteResultVo;
+import org.liuxp.minioplus.api.model.vo.FileCheckResultVo;
+import org.liuxp.minioplus.api.model.vo.FileMetadataInfoVo;
 import org.liuxp.minioplus.s3.def.ListParts;
 import org.liuxp.minioplus.s3.def.MinioS3Client;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +30,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 存储引擎Service接口实现类
@@ -51,11 +52,6 @@ public class StorageEngineServiceImpl implements StorageEngineService {
 
     @Resource
     MinioS3Client minioS3Client;
-
-    /**
-     * MinIO中上传编号名称
-     */
-    private static final String UPLOAD_ID = "uploadId";
 
     /**
      * 上传任务初始化
@@ -572,19 +568,20 @@ public class StorageEngineServiceImpl implements StorageEngineService {
     /**
      * 构建响应给前端的分片信息
      *
-     * @param uploadCreateDTO 分片dto
-     * @param uploadId     上传任务编号
-     * @param fileSize        文件大小
-     * @param start           开始位置
-     * @param partNumber      块号
+     * @param bucketName 桶名称
+     * @param objectName 对象名称（含路径）
+     * @param uploadId 上传任务编号
+     * @param fileSize 文件大小
+     * @param start 开始位置
+     * @param partNumber 块号
      * @return {@link FileCheckResultVo.Part}
      */
-    private FileCheckResultVo.Part buildResultPart(MultipartUploadCreateDTO uploadCreateDTO, String uploadId, Long fileSize, long start, Integer partNumber) {
+    private FileCheckResultVo.Part buildResultPart(String bucketName,String objectName,String uploadId, Long fileSize, long start, Integer partNumber) {
         // 计算起始位置
         long end = Math.min(start + properties.getPart().getSize(), fileSize);
-        String uploadUrl = minioS3Client.getUploadObjectUrl(uploadCreateDTO.getBucketName(), uploadCreateDTO.getObjectName(), uploadId,String.valueOf(partNumber));
+        String uploadUrl = minioS3Client.getUploadObjectUrl(bucketName, objectName, uploadId,String.valueOf(partNumber));
         FileCheckResultVo.Part part = new FileCheckResultVo.Part();
-        part.setUploadId(uploadCreateDTO.getUploadId());
+        part.setUploadId(uploadId);
         // 上传地址
         part.setUrl(uploadUrl);
         // 开始位置
@@ -757,22 +754,17 @@ public class StorageEngineServiceImpl implements StorageEngineService {
         // 断点续传
         if (Boolean.TRUE.equals(bo.getIsSequel()) && CollUtil.isNotEmpty(bo.getMissPartNum()) && CharSequenceUtil.isNotBlank(bo.getUploadId())) {
             // 断点续传需要使用已创建的任务信息构建分片信息
-            MultipartUploadCreateDTO uploadCreateDTO = MultipartUploadCreateDTO.builder()
-                    .bucketName(bo.getStorageBucket())
-                    .objectName(MinioPlusCommonUtil.getObjectName(bo.getFileMd5()))
-                    .build();
             // 存储桶
-            bucketName = uploadCreateDTO.getBucketName();
+            bucketName = bo.getStorageBucket();
             // 存储路径
-            storagePath = uploadCreateDTO.getObjectName();
+            storagePath = MinioPlusCommonUtil.getObjectName(bo.getFileMd5());
             // 文件key
             fileKey = bo.getFileKey();
             uploadId = bo.getUploadId();
-            uploadCreateDTO.setUploadId(bo.getUploadId());
             // 开始位置
             long start = (long) (bo.getMissPartNum().get(0) - 1) * properties.getPart().getSize();
             for (int partNumber : bo.getMissPartNum()) {
-                FileCheckResultVo.Part part = this.buildResultPart(uploadCreateDTO, uploadId, bo.getFileSize(), start, partNumber);
+                FileCheckResultVo.Part part = this.buildResultPart(bucketName,storagePath, uploadId, bo.getFileSize(), start, partNumber);
                 // 更改下一次的开始位置
                 start = start + properties.getPart().getSize();
                 partList.add(part);
@@ -806,15 +798,10 @@ public class StorageEngineServiceImpl implements StorageEngineService {
                 uploadId = fileKey;
             } else {
                 // 创建分片请求,获取uploadId
-                MultipartUploadCreateDTO uploadCreateDTO = MultipartUploadCreateDTO.builder()
-                        .bucketName(bucketName)
-                        .objectName(MinioPlusCommonUtil.getObjectName(bo.getFileMd5()))
-                        .build();
                 uploadId = minioS3Client.createMultipartUpload(bucketName,MinioPlusCommonUtil.getObjectName(bo.getFileMd5()));
-                uploadCreateDTO.setUploadId(uploadId);
                 long start = 0;
                 for (Integer partNumber = 1; partNumber <= chunkNum; partNumber++) {
-                    FileCheckResultVo.Part part = this.buildResultPart(uploadCreateDTO, uploadId, bo.getFileSize(), start, partNumber);
+                    FileCheckResultVo.Part part = this.buildResultPart(bucketName,MinioPlusCommonUtil.getObjectName(bo.getFileMd5()), uploadId, bo.getFileSize(), start, partNumber);
                     // 更改下一次的开始位置
                     start = start + properties.getPart().getSize();
                     partList.add(part);

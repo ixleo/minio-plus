@@ -1,34 +1,26 @@
-package org.liuxp.minioplus.core.service;
+package org.liuxp.minioplus.api;
 
 import cn.hutool.core.lang.Pair;
-import org.liuxp.minioplus.model.dto.FileMetadataInfoDTO;
-import org.liuxp.minioplus.model.dto.FileSaveDTO;
-import org.liuxp.minioplus.model.vo.FileMetadataInfoVo;
+import org.liuxp.minioplus.api.model.dto.FileMetadataInfoDTO;
+import org.liuxp.minioplus.api.model.dto.FileSaveDTO;
+import org.liuxp.minioplus.api.model.vo.FileMetadataInfoVo;
 
 import java.io.InputStream;
 import java.util.List;
 
 /**
- * 存储组件Service层公共方法
- * 本类的方法是给后端业务研发提供的公共方法，后端业务研发可以@Resources引用本类使用
+ * MinIO Plus 接口定义
  * @author contact@liuxp.me
- * @since  2023/06/26
+ * @since  2024/06/05
  */
 public interface StorageService {
-
-    /**
-     * 根据文件id查询
-     * @param id 文件ID
-     * @return 文件元数据信息
-     */
-    FileMetadataInfoVo oneById(Long id);
 
     /**
      * 根据文件key查询
      * @param key 文件key
      * @return 文件元数据信息
      */
-    FileMetadataInfoVo oneByKey(String key);
+    FileMetadataInfoVo one(String key);
 
     /**
      * 列表数据查询
