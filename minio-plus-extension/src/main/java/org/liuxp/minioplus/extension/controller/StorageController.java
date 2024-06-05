@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.liuxp.minioplus.config.MinioPlusProperties;
+import org.liuxp.minioplus.common.config.MinioPlusProperties;
 import org.liuxp.minioplus.extension.context.Response;
 import org.liuxp.minioplus.model.dto.FileCheckDTO;
 import org.liuxp.minioplus.model.dto.FileCompleteDTO;

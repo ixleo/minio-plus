@@ -8,7 +8,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import org.liuxp.minioplus.config.MinioPlusProperties;
+import org.liuxp.minioplus.common.config.MinioPlusProperties;
 import org.liuxp.minioplus.model.dto.FileMetadataInfoDTO;
 import org.liuxp.minioplus.model.dto.FileMetadataInfoSaveDTO;
 import org.liuxp.minioplus.model.dto.FileSaveDTO;

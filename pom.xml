@@ -37,7 +37,6 @@
     <modules>
         <module>minio-plus-application</module>
         <module>minio-plus-common</module>
-        <module>minio-plus-config</module>
         <module>minio-plus-core</module>
         <module>minio-plus-extension</module>
         <module>minio-plus-model</module>
@@ -155,11 +154,6 @@
             <dependency>
                 <groupId>org.liuxp</groupId>
                 <artifactId>minio-plus-model</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.liuxp</groupId>
-                <artifactId>minio-plus-config</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

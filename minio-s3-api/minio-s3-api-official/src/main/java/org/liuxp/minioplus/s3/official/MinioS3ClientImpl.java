@@ -8,7 +8,7 @@ import io.minio.messages.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.liuxp.minioplus.common.enums.MinioPlusErrorCode;
 import org.liuxp.minioplus.common.exception.MinioPlusException;
-import org.liuxp.minioplus.config.MinioPlusProperties;
+import org.liuxp.minioplus.common.config.MinioPlusProperties;
 import org.liuxp.minioplus.s3.def.ListParts;
 import org.liuxp.minioplus.s3.def.MinioS3Client;
 import org.springframework.stereotype.Repository;

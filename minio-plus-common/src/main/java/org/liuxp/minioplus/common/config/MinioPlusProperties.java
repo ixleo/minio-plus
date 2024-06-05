@@ -1,4 +1,4 @@
-package org.liuxp.minioplus.config;
+package org.liuxp.minioplus.common.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -25,15 +25,14 @@
 
 ![模块划分](doc/image/模块划分.png)
 
-* minio-plus-core：核心业务逻辑包
-* minio-plus-extension：扩展包，该包封装了Controller相关接口，帮助项目使用时开箱即用
-* minio-plus-common：工具类包，一些常用的工具类
-* minio-plus-model：实体类包
-* minio-plus-config：配置类包
+* minio-plus-api：MinIO Plus 对外提供的能力接口定义，可以理解为 Service 层接口定义
+* minio-plus-core：核心业务逻辑包，可以理解为 minio-plus-api 包的接口实现
+* minio-plus-extension：扩展包，该包封装了Controller相关接口，可以理解为 minio-plus-api 包的接口的 Controller 层封装，帮助项目使用时开箱即用
+* minio-plus-common：工具类、配置类包
 * minio-plus-spring-boot-starter
-  * minio-plus-all-spring-boot-starter：包含core、extension、common、model
-  * minio-plus-core-spring-boot-starter：包含core、common、model
-  * minio-plus-model-spring-boot-starter：只有model自身
+  * minio-plus-all-spring-boot-starter：包含core、extension、common、api
+  * minio-plus-core-spring-boot-starter：包含core、common、api
+  * minio-plus-api-spring-boot-starter：只有api定义
 * minio-plus-application
   * minio-plus-application-mysql：基于all-starter，元数据使用MySQL数据库的示例工程
   

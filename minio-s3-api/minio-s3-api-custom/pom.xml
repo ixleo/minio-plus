@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>org.liuxp</groupId>
-            <artifactId>minio-plus-config</artifactId>
+            <artifactId>minio-plus-common</artifactId>
         </dependency>
     </dependencies>
 
