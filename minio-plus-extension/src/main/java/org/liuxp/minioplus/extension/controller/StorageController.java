@@ -1,24 +1,21 @@
 package org.liuxp.minioplus.extension.controller;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.liuxp.minioplus.common.config.MinioPlusProperties;
-import org.liuxp.minioplus.extension.context.Response;
+import org.liuxp.minioplus.api.StorageService;
 import org.liuxp.minioplus.api.model.dto.FileCheckDTO;
 import org.liuxp.minioplus.api.model.dto.FileCompleteDTO;
 import org.liuxp.minioplus.api.model.vo.CompleteResultVo;
 import org.liuxp.minioplus.api.model.vo.FileCheckResultVo;
-import org.liuxp.minioplus.core.engine.StorageEngineService;
+import org.liuxp.minioplus.extension.context.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -42,13 +39,7 @@ public class StorageController {
      * 存储引擎Service接口定义
      */
     @Resource
-    private StorageEngineService storageEngineService;
-
-    /**
-     * 配置文件
-     */
-    @Resource
-    MinioPlusProperties properties;
+    private StorageService storageService;
 
     /**
      * 上传任务初始化
@@ -64,13 +55,7 @@ public class StorageController {
         // 取得当前登录用户信息
         String userId = "mockUser";
 
-        FileCheckResultVo resultVo = storageEngineService.init(fileCheckDTO,userId);
-
-        if(resultVo!=null){
-            for (FileCheckResultVo.Part part : resultVo.getPartList()) {
-                part.setUrl(remakeUrl(part.getUrl()));
-            }
-        }
+        FileCheckResultVo resultVo = storageService.init(fileCheckDTO,userId);
 
         return Response.success(resultVo);
     }
@@ -90,13 +75,7 @@ public class StorageController {
 
         // 打印调试日志
         log.debug("合并文件开始fileKey="+fileKey+",partMd5List="+fileCompleteDTO.getPartMd5List());
-        CompleteResultVo completeResultVo = storageEngineService.complete(fileKey,fileCompleteDTO.getPartMd5List(),userId);
-
-        if(completeResultVo!=null){
-            for (FileCheckResultVo.Part part : completeResultVo.getPartList()) {
-                part.setUrl(remakeUrl(part.getUrl()));
-            }
-        }
+        CompleteResultVo completeResultVo = storageService.complete(fileKey,fileCompleteDTO.getPartMd5List(),userId);
 
         return Response.success(completeResultVo);
     }
@@ -115,7 +94,7 @@ public class StorageController {
         InputStream inputStream = null;
         try {
             inputStream = request.getInputStream();
-            isUpload =  storageEngineService.uploadImage(fileKey, IoUtil.readBytes(inputStream));
+            isUpload =  storageService.uploadImage(fileKey, IoUtil.readBytes(inputStream));
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
@@ -137,9 +116,7 @@ public class StorageController {
         // 取得当前登录用户信息
         String userId = "mockUser";
         // 取得文件读取路径
-        String url = storageEngineService.download(fileKey, userId);
-        // 不存在时返回404 返回重定向地址
-        return REDIRECT_PREFIX + remakeUrl(url);
+        return REDIRECT_PREFIX + storageService.download(fileKey, userId);
     }
 
     /**
@@ -154,9 +131,7 @@ public class StorageController {
         // 取得当前登录用户信息
         String userId = "mockUser";
         // 取得文件读取路径
-        String url = storageEngineService.image(fileKey, userId);
-        // 返回重定向地址
-        return REDIRECT_PREFIX + remakeUrl(url);
+        return REDIRECT_PREFIX + storageService.image(fileKey, userId);
     }
 
     /**
@@ -171,23 +146,7 @@ public class StorageController {
         // 取得当前登录用户信息
         String userId = "mockUser";
         // 取得文件读取路径
-        String url = storageEngineService.preview(fileKey, userId);
-        // 返回重定向地址
-        return REDIRECT_PREFIX + remakeUrl(url);
-    }
-
-
-    /**
-     * 重写文件地址
-     * @param url 文件地址
-     * @return 重写后的文件地址
-     */
-    private String remakeUrl(String url){
-
-        if(StrUtil.isNotBlank(properties.getBrowserUrl())){
-            return url.replace(properties.getBackend(), properties.getBrowserUrl());
-        }
-        return url;
+        return REDIRECT_PREFIX + storageService.preview(fileKey, userId);
     }
 
 }

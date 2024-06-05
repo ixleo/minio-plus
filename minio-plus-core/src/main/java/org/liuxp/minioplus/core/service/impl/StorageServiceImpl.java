@@ -5,9 +5,13 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import org.liuxp.minioplus.api.model.dto.FileCheckDTO;
+import org.liuxp.minioplus.api.model.vo.CompleteResultVo;
+import org.liuxp.minioplus.api.model.vo.FileCheckResultVo;
 import org.liuxp.minioplus.common.config.MinioPlusProperties;
 import org.liuxp.minioplus.api.model.dto.FileMetadataInfoDTO;
 import org.liuxp.minioplus.api.model.dto.FileMetadataInfoSaveDTO;
@@ -52,6 +56,52 @@ public class StorageServiceImpl implements StorageService {
      */
     @Resource
     MinioPlusProperties properties;
+
+    @Override
+    public FileCheckResultVo init(FileCheckDTO dto, String userId) {
+        FileCheckResultVo resultVo =  storageEngineService.init(dto,userId);
+
+        if(resultVo!=null){
+            for (FileCheckResultVo.Part part : resultVo.getPartList()) {
+                part.setUrl(remakeUrl(part.getUrl()));
+            }
+        }
+
+        return resultVo;
+    }
+
+    @Override
+    public CompleteResultVo complete(String fileKey, List<String> partMd5List, String userId) {
+        CompleteResultVo completeResultVo =  storageEngineService.complete(fileKey,partMd5List,userId);
+
+        if(completeResultVo!=null){
+            for (FileCheckResultVo.Part part : completeResultVo.getPartList()) {
+                part.setUrl(remakeUrl(part.getUrl()));
+            }
+        }
+
+        return completeResultVo;
+    }
+
+    @Override
+    public Boolean uploadImage(String fileKey, byte[] file) {
+        return storageEngineService.uploadImage(fileKey,file);
+    }
+
+    @Override
+    public String download(String fileKey, String userId) {
+        return storageEngineService.download(fileKey,userId);
+    }
+
+    @Override
+    public String image(String fileKey, String userId) {
+        return storageEngineService.image(fileKey,userId);
+    }
+
+    @Override
+    public String preview(String fileKey, String userId) {
+        return storageEngineService.preview(fileKey,userId);
+    }
 
     @Override
     public FileMetadataInfoVo one(String key) {
@@ -173,5 +223,18 @@ public class StorageServiceImpl implements StorageService {
         fileMetadataInfoSaveDTO.setUpdateUser(fileSaveDTO.getCreateUser());
 
         return fileMetadataInfoSaveDTO;
+    }
+
+    /**
+     * 重写文件地址
+     * @param url 文件地址
+     * @return 重写后的文件地址
+     */
+    private String remakeUrl(String url){
+
+        if(StrUtil.isNotBlank(properties.getBrowserUrl())){
+            return url.replace(properties.getBackend(), properties.getBrowserUrl());
+        }
+        return url;
     }
 }
